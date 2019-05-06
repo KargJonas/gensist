@@ -1,0 +1,1 @@
+Content of the input file: content content content

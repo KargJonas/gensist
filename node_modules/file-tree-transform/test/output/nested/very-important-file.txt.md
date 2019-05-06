@@ -1,0 +1,1 @@
+Content of the input file: lorem ipsum dolor sit amet

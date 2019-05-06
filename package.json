@@ -2,7 +2,7 @@
   "name": "gensist",
   "version": "1.0.0",
   "description": "A simple, static site generator.",
-  "main": "gensist.config.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node gensist.js"
@@ -19,5 +19,10 @@
   "bugs": {
     "url": "https://github.com/KargJonas/gensist/issues"
   },
-  "homepage": "https://github.com/KargJonas/gensist#readme"
+  "homepage": "https://github.com/KargJonas/gensist#readme",
+  "dependencies": {
+    "commander": "^2.20.0",
+    "file-tree-transform": "^1.0.0",
+    "ncp": "^2.0.0"
+  }
 }
