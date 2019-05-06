@@ -1,0 +1,9 @@
+{
+  "themes": ["theme.css"],
+  "language": "en",
+  "title": "Example",
+  "input": "content",
+  "output": "build",
+  "assets": "assets",
+  "template": "config/template.html"
+}

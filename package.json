@@ -23,6 +23,9 @@
   "dependencies": {
     "commander": "^2.20.0",
     "file-tree-transform": "^1.0.0",
-    "ncp": "^2.0.0"
+    "html-minifier": "^4.0.0",
+    "mustache": "^3.0.1",
+    "ncp": "^2.0.0",
+    "showdown": "^1.9.0"
   }
 }
