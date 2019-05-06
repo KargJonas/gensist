@@ -1,0 +1,23 @@
+{
+  "name": "gensist",
+  "version": "1.0.0",
+  "description": "A simple, static site generator.",
+  "main": "gensist.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node gensist.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/KargJonas/gensist.git"
+  },
+  "keywords": [
+    "Static-site"
+  ],
+  "author": "Jonas Karg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KargJonas/gensist/issues"
+  },
+  "homepage": "https://github.com/KargJonas/gensist#readme"
+}
