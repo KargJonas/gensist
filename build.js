@@ -3,30 +3,10 @@ const converter = require("./converters/default");
 const path = require("path");
 const ncp = require("ncp");
 const fs = require("fs");
-const chalk = require("chalk");
-const boxen = require("boxen");
-const wrap = require("word-wrap");
+const { info, error } = require("./info");
 
 const templateFolder = path.join(__dirname, "template");
 const defaultConfigFile = path.join(__dirname, "default-config.json");
-
-function box(message, color = "white") {
-  return boxen(wrap(message,
-    { width: process.stdout.columns - 10, indent: "" }),
-    { padding: 1, borderColor: color });
-}
-
-function info(...message) {
-  console.log(chalk.black(chalk.bgYellow("GENSIST INFO")) + ":");
-  console.log(box(message.join("\n\n"), "yellow"));
-}
-
-function error(...message) {
-  const err = new Error("\n" + box(message.join("\n\n"), "red"));
-  err.name = chalk.black(chalk.bgRed("GENSIST ERROR"));
-
-  throw err;
-}
 
 function build(folder) {
   const getAbsolute = (relativePath) => path.join(folder, relativePath);

@@ -1,12 +1,10 @@
 {
   "title": "Test Site",
-  "optimize": true,
   "input": "content",
   "output": "build",
+  "assets": "assets",
   "template": "template.html",
-  "type": "markdown",
-  "addFileNameToTitle": true,
-  "styles": [
+  "style": [
     "theme.css"
   ]
 }

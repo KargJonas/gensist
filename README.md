@@ -1,3 +1,5 @@
+# WARNING - DO NOT USED THIS PACKAGE. IT IS UNDER CONSTRUCTION.
+
 ## A simple, static site generator.
 ### Warning - This package is under construction.
 
