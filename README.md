@@ -9,6 +9,12 @@
 #### Build current folder:
 `gensist`
 
+#### Generate missing files
+`genist init`
+
+#### Version
+`gensist -v`
+
 ToDo:
 - Declutter the config-mess
   - Folder structure (strictly defined by default but can be changed)
