@@ -2,10 +2,10 @@
 ### Warning - This package is under construction.
 
 #### Create a new project:
-`gensis new <name>`
+`gensist new <name>`
 
 #### Build current folder:
-`gensis`
+`gensist`
 
 ToDo:
 - Declutter the config-mess

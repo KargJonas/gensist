@@ -16,6 +16,10 @@ cli
   .version(version, "-v --version")
 
 cli
+  .command("build")
+  .action(() => build(location))
+
+cli
   .command("new <name>")
   .action((name) => create(name, location))
 
