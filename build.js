@@ -1,5 +1,4 @@
 const transform = require("file-tree-transform");
-// const converter = require("./converters/default");
 const path = require("path");
 const fs = require("fs");
 const ncp = require("ncp");
@@ -79,6 +78,8 @@ function build(folder) {
       if (err) throw err;
     });
   }
+
+  info("Built successfully!");
 }
 
 module.exports = build;

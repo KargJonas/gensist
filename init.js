@@ -1,7 +1,7 @@
 const path = require("path");
 const ncp = require("ncp");
 const fs = require("fs");
-const { error } = require("./info");
+const { info, error } = require("./info");
 
 const templateFolder = path.join(__dirname, "template");
 const defaultConfigFile = path.join(__dirname, "default-config.json");
@@ -42,7 +42,7 @@ function init(folder) {
     copyFromTemplate("template.html", config.template);
   }
 
-  console.log("Done.");
+  info("Initialized successfully!");
 }
 
 module.exports = init;
