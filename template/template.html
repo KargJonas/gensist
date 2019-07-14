@@ -1,0 +1,33 @@
+<!--
+  INFO:
+
+  This is the template for your website.
+
+  About the curved brackets:
+  - Double brackets: Insert text (escaped)
+  - Triple brackets: Insert HTML
+
+  You have access to some variables inside the curved brackets:
+  - title:  The title of your website
+  - page:   The filename of the markdown file (without the file extension).
+  - style:  The stylesheets/theme of your website. (should always be placed in <head>)
+  - content:  The content of the current page.
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>{{title}} - {{page}}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {{{style}}}
+</head>
+
+<body>
+  {{{content}}}
+</body>
+
+</html>
