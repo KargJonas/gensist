@@ -68,7 +68,7 @@ function build(folder) {
     };
 
     return {
-      output: minify(insert(template, input, data)),
+      output: minify(insert(template, data)),
       name: `${ cleanFileName }.html`
     };
   });

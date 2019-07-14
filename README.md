@@ -10,7 +10,7 @@
 | `gensist init`       | Generate missing files. |
 | `gensist -v`         | Display gensist version |
 
-ToDo:
+### ToDo:
 - Styles
   - A couple themes to pick from
 - Default sidebars
