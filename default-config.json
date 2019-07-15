@@ -4,9 +4,7 @@
   "input": "content",
   "output": "build",
   "template": "template.html",
-  "type": "markdown",
   "assets": "assets",
-  "addFileNameToTitle": true,
   "styles": [
     "theme.css"
   ]
