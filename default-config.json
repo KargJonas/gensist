@@ -5,7 +5,7 @@
   "output": "build",
   "template": "template.html",
   "assets": "assets",
-  "styles": [
+  "style": [
     "theme.css"
   ]
 }
