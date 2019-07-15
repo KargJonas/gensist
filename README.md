@@ -24,11 +24,11 @@ You can of course configure it to be any folder you want.
 | `gensist -v`         | Display gensist version |
 
 ## Getting started:
-Just install gensist with `npm i -g gensist`, generate a new project with `npm new my-website` and build it by running `gensist` or `gensist build` inside the project and it should generate a `build/` folder with all of the HTML and CSS nicely compressed inside your project.
+Install gensist with "`npm i -g gensist`", generate a new project with "`npm new my-website`" and build it by running "`gensist`" or "`gensist build`" inside the project and it should generate a "`build/`" folder with all of the HTML and CSS nicely compressed inside your project.
 
 ## Config
 You can configure gensist by placing a `gensist.json` file in the root your project.
-If there is no `gensist.json`, gensist will fall back on this config:
+If there is no `gensist.json`, gensist will fall back on this config (all properties are optional):
 ```json
 {
   "title": "Test Site",
