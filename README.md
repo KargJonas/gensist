@@ -3,15 +3,14 @@
 # A simple static site generator.
 
 ## How it works
-Gensist grabs a folder of markdown files and/or more folders and generates a website from it. The folder structure and filenames are preserved.
+Gensist grabs a folder of markdown files and generates a website from it. The folder structure and filenames are preserved.
 
-You can build any folder that contains a `content/` folder with markdown files. For example:
 ```
-.
-└── content
-    ├── home.md
-    ├── index.md
-    └── info.md
+.                           .
+└── content                 └── build
+    ├── home.md      >>>        ├── home.html
+    ├── index.md                ├── index.html
+    └── info.md                 └── info.html
 ```
 You can of course configure it to be any folder you want.
 
@@ -24,7 +23,7 @@ You can of course configure it to be any folder you want.
 | `gensist -v`         | Display gensist version |
 
 ## Getting started:
-Install gensist with "`npm i -g gensist`", generate a new project with "`npm new my-website`" and build it by running "`gensist`" or "`gensist build`" inside the project and it should generate a "`build/`" folder with all of the HTML and CSS nicely compressed inside your project.
+Install gensist with `"npm i -g gensist"`, generate a new project with `"npm new my-website"` and build it by running `"gensist"` or `"gensist build"` inside the project and it should generate a `"build/"` folder with all of the HTML and CSS nice and compressed inside your project.
 
 ## Config
 You can configure gensist by placing a `gensist.json` file in the root your project.
