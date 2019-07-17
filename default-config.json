@@ -1,13 +1,7 @@
 {
-  "title": "Test Site",
+  "title": "Gensist",
   "optimize": true,
   "input": "content",
   "output": "build",
-  "template": "template.html",
-  "type": "markdown",
-  "assets": "assets",
-  "addFileNameToTitle": true,
-  "styles": [
-    "theme.css"
-  ]
+  "template": "template.html"
 }

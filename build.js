@@ -1,14 +1,27 @@
 const transform = require("file-tree-transform");
-const converter = require("./converters/default");
 const path = require("path");
-const ncp = require("ncp");
 const fs = require("fs");
+const ncp = require("ncp");
 const { info, error } = require("./info");
+
+const markdown = require("./converters/markdown");
+const insert = require("./converters/insert");
+const minifyHtml = require("./converters/minifyHtml");
+const minifyCss = require("./converters/minifyCss");
 
 const templateFolder = path.join(__dirname, "template");
 const defaultConfigFile = path.join(__dirname, "default-config.json");
 
-function build(folder) {
+function readFileAsync(filename) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filename, "utf-8", (err, data) => {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
+};
+
+async function build(folder) {
   const getAbsolute = (relativePath) => path.join(folder, relativePath);
   const exists = (path) => fs.existsSync(getAbsolute(path));
   const isFolder = (path) => exists(path) && fs.lstatSync(getAbsolute(path)).isDirectory();
@@ -18,26 +31,25 @@ function build(folder) {
     error(`Can't build here: "${ folder }".`);
   }
 
+  const defaultConfig = require(defaultConfigFile);
   const hasConfig = exists("gensist.json");
+  const userConfig = hasConfig ? require(getAbsolute("gensist.json")) : {};
+  const config = Object.assign(defaultConfig, userConfig);
+  const hasTemplate = exists(config.template);
+
+  if (!exists(config.input)) {
+    error(
+      `No input folder "${ config.input }/" found!`,
+      `You can set the input folder in "gensist.json".`,
+      `(relative to the project folder)`
+    );
+  }
 
   if (!hasConfig) {
     info(
       `This folder is missing a config (gensist.json).`,
       `Run "gensist init" to add generate one.`,
       "Falling back to defaults."
-    );
-  }
-
-  const defaultConfig = require(defaultConfigFile);
-  const userConfig = hasConfig ? require(getAbsolute("gensist.json")) : {};
-  const config = Object.assign(defaultConfig, userConfig);
-  const hasTemplate = exists(config.template);
-  const hasInputFolder = exists(config.input);
-
-  if (!hasInputFolder) {
-    error(
-      `No input folder "${config.input}" found!`,
-      `You can set the input folder in "gensist.json". It is relative to the project folder.`
     );
   }
 
@@ -49,6 +61,9 @@ function build(folder) {
     );
   }
 
+  const htmlOptimizer = config.optimize ? minifyHtml : $ => $;
+  const cssOptimizer = config.optimize ? minifyCss : $ => $;
+
   const template = load(hasTemplate
     ? getAbsolute(config.template)
     : path.join(templateFolder, "template.html"));
@@ -56,18 +71,60 @@ function build(folder) {
   const inputDir = getAbsolute(config.input);
   const outputDir = getAbsolute(config.output);
 
-  transform(inputDir, outputDir, ({ input, name }) => ({
-    output: converter(template, input),
-    name: `${ name.slice(0, name.length - 3) }.html`
-  }));
+  let style = false;
 
-  const hasAssetsFolder = exists(config.assets);
+  if (config.style) {
+    if (!(config.style instanceof Array)) {
+      error(`The "style"-property in gensist.json must be an array!`);
+    }
 
-  if (hasAssetsFolder) {
-    ncp(getAbsolute(config.assets), path.join(outputDir, "assets"), (err) => {
+    if (!config.style.length) return;
+
+    if (config.style.filter((item) => typeof item === "string").length !== config.style.length) {
+      error(`The style array in gensist.json may only contain strings!`);
+    }
+
+    style = true;
+  }
+
+  transform(inputDir, outputDir, ({ input, name }) => {
+    const cleanFileName = name.slice(0, name.lastIndexOf(".")) || name;
+
+    const data = {
+      title: config.title,
+      page: cleanFileName,
+      content: markdown(input),
+      style: style ? `<link rel="stylesheet"href="style.css"></link>` : ""
+    };
+
+    return {
+      output: htmlOptimizer(insert(template, data)),
+      name: `${ cleanFileName }.html`
+    };
+  });
+
+  if (style) {
+    const loadedStyles = await Promise.all(config.style.map(readFileAsync))
+      .catch((e) => {
+        console.error(e);
+        error(`BUILD FAILED\nCould not load style file${ e.path ? `\n\n${ e.path }` : "" }`);
+      });
+
+    fs.writeFileSync(
+      path.join(outputDir, "style.css"),
+      await cssOptimizer(loadedStyles.join("\n")),
+      (err) => { if (err) throw err }
+    );
+  }
+
+  if (typeof config.assets === "string" && exists(config.assets)) {
+    ncp(getAbsolute(config.assets), path.join(getAbsolute("build"), "assets"), (err) => {
       if (err) throw err;
     });
   }
+
+  info("Built successfully!");
+  return 0;
 }
 
 module.exports = build;

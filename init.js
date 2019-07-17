@@ -11,6 +11,13 @@ function init(folder) {
   const exists = (path) => fs.existsSync(getAbsolute(path));
   const isFolder = (path) => exists(path) && fs.lstatSync(getAbsolute(path)).isDirectory();
 
+  function copyFromTemplate(fileName, newFileName = fileName) {
+    console.log(`Generating "${ newFileName }"`);
+    ncp(path.join(templateFolder, fileName), getAbsolute(newFileName), (err) => {
+      if (err) throw err;
+    });
+  }
+
   if (!isFolder("")) {
     error(`Can't init gensist here: "${ folder }".`);
   }
@@ -18,10 +25,7 @@ function init(folder) {
   const hasConfig = exists("gensist.json");
 
   if (!hasConfig) {
-    console.log(`Generating "gensist.json"`);
-    ncp(path.join(templateFolder, "gensist.json"), getAbsolute("gensist.json"), (err) => {
-      if (err) throw err;
-    });
+    copyFromTemplate("gensist.json");
   }
 
   const defaultConfig = require(defaultConfigFile);
@@ -31,33 +35,15 @@ function init(folder) {
   const config = Object.assign(defaultConfig, userConfig);
 
   if (!exists(config.input)) {
-    console.log(`Generating "${ config.input }/"`);
-    ncp(path.join(templateFolder, "content"), getAbsolute("content"), (err) => {
-      if (err) throw err;
-    });
+    copyFromTemplate("content", config.input);
   }
 
   if (!exists(config.template)) {
-    console.log(`Generating "${ config.template }"`);
-    ncp(path.join(templateFolder, "template.html"), getAbsolute("template.html"), (err) => {
-      if (err) throw err;
-    });
+    copyFromTemplate("template.html", config.template);
   }
 
-  if (typeof config.assets === "string") {
-    console.log(`Generating "${ config.assets }/".`)
-    fs.mkdirSync(getAbsolute(config.assets));
-  }
-
-  if (config.style instanceof Array) {
-    config.style.map((file) => {
-      if (exists(file)) return;
-      console.log(`Generating "${ file }".`);
-      fs.writeFileSync(getAbsolute(file), "");
-    });
-  }
-
-  console.log("Done.");
+  info("Initialized successfully!");
+  return 0;
 }
 
 module.exports = init;

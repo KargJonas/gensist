@@ -9,7 +9,7 @@ function box(message, color = "white") {
 }
 
 function info(...message) {
-  console.log(chalk.black(chalk.bgYellow("GENSIST INFO")) + ":");
+  console.log("\n" + chalk.black(chalk.bgYellow("GENSIST INFO")) + ":");
   console.log(box(message.join("\n\n"), "yellow"));
 }
 
