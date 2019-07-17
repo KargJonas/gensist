@@ -124,6 +124,7 @@ async function build(folder) {
   }
 
   info("Built successfully!");
+  return 0;
 }
 
 module.exports = build;

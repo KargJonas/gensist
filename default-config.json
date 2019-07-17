@@ -3,9 +3,5 @@
   "optimize": true,
   "input": "content",
   "output": "build",
-  "template": "template.html",
-  "assets": "assets",
-  "style": [
-    "theme.css"
-  ]
+  "template": "template.html"
 }

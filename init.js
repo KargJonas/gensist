@@ -43,6 +43,7 @@ function init(folder) {
   }
 
   info("Initialized successfully!");
+  return 0;
 }
 
 module.exports = init;
