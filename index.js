@@ -5,10 +5,10 @@ const version = require("./package.json").version;
 const location = process.cwd();
 const required = require.main !== module;
 
-const create = require("./create");
-const build = require("./build");
-const init = require("./init");
-const watch = require("./watch");
+const create = require("./methods/create");
+const build = require("./methods/build");
+const init = require("./methods/init");
+const watch = require("./methods/watch");
 
 module.exports = { create, build, init, watch };
 

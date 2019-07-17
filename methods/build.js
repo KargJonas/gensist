@@ -3,14 +3,12 @@ const path = require("path");
 const fs = require("fs");
 const ncp = require("ncp");
 const { info, error } = require("./info");
+const getConfig = require("./get-config");
 
-const markdown = require("./converters/markdown");
-const insert = require("./converters/insert");
-const minifyHtml = require("./converters/minifyHtml");
-const minifyCss = require("./converters/minifyCss");
-
-const templateFolder = path.join(__dirname, "template");
-const defaultConfigFile = path.join(__dirname, "default-config.json");
+const markdown = require("../converters/markdown");
+const insert = require("../converters/insert");
+const minifyHtml = require("../converters/minifyHtml");
+const minifyCss = require("../converters/minifyCss");
 
 function readFileAsync(filename) {
   return new Promise((resolve, reject) => {
@@ -24,20 +22,11 @@ function readFileAsync(filename) {
 async function build(folder) {
   const getAbsolute = (relativePath) => path.join(folder, relativePath);
   const exists = (path) => fs.existsSync(getAbsolute(path));
-  const isFolder = (path) => exists(path) && fs.lstatSync(getAbsolute(path)).isDirectory();
   const load = (path) => fs.readFileSync(path).toString();
 
-  if (!isFolder("")) {
-    error(`Can't build here: "${ folder }".`);
-  }
+  const { config, meta } = getConfig(folder);
 
-  const defaultConfig = require(defaultConfigFile);
-  const hasConfig = exists("gensist.json");
-  const userConfig = hasConfig ? require(getAbsolute("gensist.json")) : {};
-  const config = Object.assign(defaultConfig, userConfig);
-  const hasTemplate = exists(config.template);
-
-  if (!exists(config.input)) {
+  if (!meta.hasInput) {
     error(
       `No input folder "${ config.input }/" found!`,
       `You can set the input folder in "gensist.json".`,
@@ -45,7 +34,7 @@ async function build(folder) {
     );
   }
 
-  if (!hasConfig) {
+  if (!meta.hasConfig) {
     info(
       `This folder is missing a config (gensist.json).`,
       `Run "gensist init" to add generate one.`,
@@ -53,7 +42,7 @@ async function build(folder) {
     );
   }
 
-  if (!hasTemplate) {
+  if (!meta.hasTemplate) {
     info(
       "This folder is missing a template file.",
       `Run "gensist init" to generate one.`,
@@ -64,28 +53,10 @@ async function build(folder) {
   const htmlOptimizer = config.optimize ? minifyHtml : $ => $;
   const cssOptimizer = config.optimize ? minifyCss : $ => $;
 
-  const template = load(hasTemplate
-    ? getAbsolute(config.template)
-    : path.join(templateFolder, "template.html"));
+  const template = load(config.template);
 
   const inputDir = getAbsolute(config.input);
   const outputDir = getAbsolute(config.output);
-
-  let style = false;
-
-  if (config.style) {
-    if (!(config.style instanceof Array)) {
-      error(`The "style"-property in gensist.json must be an array!`);
-    }
-
-    if (!config.style.length) return;
-
-    if (config.style.filter((item) => typeof item === "string").length !== config.style.length) {
-      error(`The style array in gensist.json may only contain strings!`);
-    }
-
-    style = true;
-  }
 
   transform(inputDir, outputDir, ({ input, name }) => {
     const cleanFileName = name.slice(0, name.lastIndexOf(".")) || name;
@@ -94,7 +65,7 @@ async function build(folder) {
       title: config.title,
       page: cleanFileName,
       content: markdown(input),
-      style: style ? `<link rel="stylesheet"href="style.css"></link>` : ""
+      style: meta.hasStyle ? `<link rel="stylesheet"href="style.css"></link>` : ""
     };
 
     return {
@@ -103,7 +74,7 @@ async function build(folder) {
     };
   });
 
-  if (style) {
+  if (meta.hasStyle) {
     const loadedStyles = await Promise.all(config.style.map(readFileAsync))
       .catch((e) => {
         console.error(e);
@@ -117,7 +88,7 @@ async function build(folder) {
     );
   }
 
-  if (typeof config.assets === "string" && exists(config.assets)) {
+  if (meta.hasAssets) {
     ncp(getAbsolute(config.assets), path.join(getAbsolute("build"), "assets"), (err) => {
       if (err) throw err;
     });
