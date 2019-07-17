@@ -27,19 +27,33 @@ Gensist grabs a folder of markdown files and generates a website from it. The fo
 Install gensist with `"npm i -g gensist"`, generate a new project with `"npm new my-website"` and start it by running `"gensist watch"`. Your browser should open a new tab and when you now make changes to your files the browser should automatically update the page as soon as you save them.
 
 ## Config
-You can configure gensist by placing a `gensist.json` file in the root your project (all paths are relative to the `gensist.json` file).
+You can configure gensist by placing a `gensist.json` file in the root your project. All paths in the config are relative to the `gensist.json` file of your project.
 
-| Property   | Default value   | Type       | Description                                                                 |
-| ---------- | --------------- | ---------- | --------------------------------------------------------------------------- |
-| `title`    | `"Gensist"`     | `string`   | Title of your website - you can <br>customize it further in `template.html` |
-| `input`    | `content`       | `string`   | Input folder                                                                |
-| `output`   | `build`         | `string`   | Output folder                                                               |
-| `template` | `template.html` | `string`   | The HTML template used to <br>construct each page of your site              |
-| `optimize` | `true`          | `boolean`  | Tells gensist to compress the HTML/CSS                                      |
-| `style`    | _Not set_       | `string[]` | List of stylesheets to apply to the page                                    |
-| `assets`   | _Not set_       | `string`   | Asset folder for images, fonts, etc.                                        |
+### Example
+```json
+{
+  "title": "Test Site",
+  "input": "content",
+  "output": "build",
+  "template": "template.html",
+  "style": [
+    "theme.css"
+  ]
+}
+```
 
-If there is no `gensist.json`, gensist will fall back on this config (all properties are optional):
+### More properties
+| Property   | Default value   | Type       | Description                                                                     |
+| ---------- | --------------- | ---------- | ------------------------------------------------------------------------------- |
+| `title`    | `"Gensist"`     | `string`   | Title of your website - you can <br>customize it further in <br>`template.html` |
+| `input`    | `content`       | `string`   | Input folder                                                                    |
+| `output`   | `build`         | `string`   | Output folder                                                                   |
+| `template` | `template.html` | `string`   | The HTML template used to <br>construct each page of your site                  |
+| `optimize` | `true`          | `boolean`  | Tells gensist to compress the HTML/CSS                                          |
+| `style`    | _Not set_       | `string[]` | List of stylesheets to apply to the page                                        |
+| `assets`   | _Not set_       | `string`   | Asset folder for images, fonts, etc.                                            |
+
+If there is no `gensist.json`, gensist will fall back on this config:
 ```json
 {
   "title": "Gensist",
