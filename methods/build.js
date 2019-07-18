@@ -21,9 +21,7 @@ function readFileAsync(filename) {
 
 async function build(folder) {
   const getAbsolute = (relativePath) => path.join(folder, relativePath);
-  const exists = (path) => fs.existsSync(getAbsolute(path));
   const load = (path) => fs.readFileSync(path).toString();
-
   const { config, meta } = getConfig(folder);
 
   if (!meta.hasInput) {

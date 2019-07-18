@@ -2,14 +2,13 @@ const path = require("path");
 const ncp = require("ncp");
 const fs = require("fs");
 const { info, error } = require("./info");
+const files = require("./files");
 
 const templateFolder = path.join(__dirname, "template");
 const defaultConfigFile = path.join(__dirname, "default-config.json");
 
 function init(folder) {
-  const getAbsolute = (relativePath) => path.join(folder, relativePath);
-  const exists = (path) => fs.existsSync(getAbsolute(path));
-  const isFolder = (path) => exists(path) && fs.lstatSync(getAbsolute(path)).isDirectory();
+  const { getAbsolute, exists, isFolder } = files(folder);
 
   function copyFromTemplate(fileName, newFileName = fileName) {
     console.log(`Generating "${ newFileName }"`);
