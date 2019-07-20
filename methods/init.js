@@ -1,37 +1,18 @@
-const path = require("path");
-const ncp = require("ncp");
-const fs = require("fs");
 const { info, error } = require("./info");
 const files = require("./files");
-
-const templateFolder = path.join(__dirname, "template");
-const defaultConfigFile = path.join(__dirname, "default-config.json");
+const getConfig = require("./get-config");
 
 function init(folder) {
-  const { getAbsolute, exists, isFolder } = files(folder);
-
-  function copyFromTemplate(fileName, newFileName = fileName) {
-    console.log(`Generating "${ newFileName }"`);
-    ncp(path.join(templateFolder, fileName), getAbsolute(newFileName), (err) => {
-      if (err) throw err;
-    });
-  }
+  const { exists, isFolder, copyFromTemplate } = files(folder);
+  const { config, meta } = getConfig(folder);
 
   if (!isFolder("")) {
     error(`Can't init gensist here: "${ folder }".`);
   }
 
-  const hasConfig = exists("gensist.json");
-
-  if (!hasConfig) {
+  if (!meta.hasConfig) {
     copyFromTemplate("gensist.json");
   }
-
-  const defaultConfig = require(defaultConfigFile);
-  const userConfig = hasConfig
-    ? require(getAbsolute("gensist.json"))
-    : require(path.join(templateFolder, "gensist.json"));
-  const config = Object.assign(defaultConfig, userConfig);
 
   if (!exists(config.input)) {
     copyFromTemplate("content", config.input);

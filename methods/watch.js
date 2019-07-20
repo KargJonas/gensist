@@ -1,24 +1,16 @@
-const build = require("./build");
 const chokidar = require("chokidar");
 const browserSync = require("browser-sync").create();
-const path = require("path");
-const fs = require("fs");
-
-const defaultConfigFile = path.join(__dirname, "default-config.json");
+const files = require("./files");
+const getConfig = require("./get-config");
+const build = require("./build");
 
 function watch(folder) {
-  const getAbsolute = (relativePath) => path.join(folder, relativePath);
-  const exists = (path) => fs.existsSync(getAbsolute(path));
-  const isFolder = (path) => exists(path) && fs.lstatSync(getAbsolute(path)).isDirectory();
+  const { getAbsolute, exists, isFolder } = files(folder);
+  const { config } = getConfig(folder);
 
   if (!isFolder("")) {
     error(`Can't watch here: "${ folder }".`);
   }
-
-  const defaultConfig = require(defaultConfigFile);
-  const hasConfig = exists("gensist.json");
-  const userConfig = hasConfig ? require(getAbsolute("gensist.json")) : {};
-  const config = Object.assign(defaultConfig, userConfig);
 
   browserSync.init({ server: getAbsolute(config.output) });
 

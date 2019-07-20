@@ -1,18 +1,16 @@
-const fs = require("fs");
+const path = require("path");
+const files = require("./files");
 
-const defaultConfigFile = path.join(__dirname, "default-config.json");
+const defaultConfigFile = path.join(__dirname, "../default-config.json");
 const defaultConfig = require(defaultConfigFile);
 const templateFolder = path.join(__dirname, "template");
 
 /**
  * Returns the gensist config of a folder. The config is merged with the default values.
  * @param {string} folder The folder of which to grab the config.
- *
  */
 function getConfig(folder) {
-  const getAbsolute = (relativePath) => path.join(folder, relativePath);
-  const exists = (path) => fs.existsSync(getAbsolute(path));
-  const isFolder = (path) => exists(path) && fs.lstatSync(getAbsolute(path)).isDirectory();
+  const { getAbsolute, exists, isFolder } = files(folder);
 
   if (!isFolder("")) {
     error(`Invalid project: "${ folder }".`);
@@ -55,3 +53,5 @@ function getConfig(folder) {
 
   return { config, meta };
 }
+
+module.exports = getConfig;

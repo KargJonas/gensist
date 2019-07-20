@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const ncp = require("ncp");
 const { info, error } = require("./info");
+const files = require("./files");
 const getConfig = require("./get-config");
 
 const markdown = require("../converters/markdown");
@@ -20,9 +21,9 @@ function readFileAsync(filename) {
 };
 
 async function build(folder) {
-  const getAbsolute = (relativePath) => path.join(folder, relativePath);
-  const load = (path) => fs.readFileSync(path).toString();
+  const { getAbsolute } = files(folder);
   const { config, meta } = getConfig(folder);
+  const load = (_path) => fs.readFileSync(_path).toString();
 
   if (!meta.hasInput) {
     error(
@@ -50,9 +51,7 @@ async function build(folder) {
 
   const htmlOptimizer = config.optimize ? minifyHtml : $ => $;
   const cssOptimizer = config.optimize ? minifyCss : $ => $;
-
   const template = load(config.template);
-
   const inputDir = getAbsolute(config.input);
   const outputDir = getAbsolute(config.output);
 
